@@ -8,61 +8,87 @@ import * as db from "./BooksAPI";
 
 class BooksApp extends React.Component {
 
-  state = {
-    /**
+	state = {
+		/**
      * TODO: Instead of using this state variable to keep track of which page
      * we're on, use the URL in the browser's address bar. This will ensure that
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false,
-    books: []
-  }
+		showSearchPage: false,
+		books: []
+	}
 
-  componentDidMount() {
-    db.getAll().then(
-      value => this.setState({books: value}),
-      reason => {
-        // TODO: real app should have proper error handling
-        this.setState({books: []});
-        console.error("Can't get book records", reason);
+	get shelves() {
+		return ["currentlyReading", "wantToRead", "read"];
+	}
+
+	componentDidMount() {
+		db.getAll().then(value => this.setState({books: value}), reason => {
+			// TODO: real app should have proper error handling
+			this.setState({books: []});
+			console.error("Can't get book records", reason);
+		});
+	}
+
+	setShowSearchPage = (value) => this.setState({showSearchPage: value});
+
+	updateBook = (book, toShelf) => {
+		db.update(book, toShelf).then(dbResult => {
+
+      if (dbResult.error) {
+        alert(dbResult.error);
+        return;
       }
-    );
-  }
 
-  setShowSearchPage = (value) => this.setState({ showSearchPage: value });
+			this.setState(prevState => {
+				// Create a copy of books where to clear the shelf reference
+				const books = prevState.books.map(book => Object.assign({}, book, {shelf: ""}));
 
-  render() {
-    console.log("RENDER", this.state)
-    const {books} = this.state;
-    const shelves = ["currently reading", "want to read", "read"];
-    return (
-      <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <button className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</button>
-              <div className="search-books-input-wrapper">
-                {/*
+				// Reset shelf on each book {currentlyReading: ["sJf1vQAACAAJ"], ...}
+				this.shelves.forEach(shelf => dbResult[shelf].forEach(id => (books.find(book => book.id === id) || {
+					shouldntBeHere: true
+				}).shelf = shelf));
+
+				// Don't alter original state object here
+				return Object.assign({}, prevState, {books});
+			});
+
+		});
+	}
+
+	render() {
+		console.log("RENDER", this.state)
+		const {books} = this.state;
+		const {shelves} = this;
+		return (<div className="app">
+			{
+				this.state.showSearchPage
+					? (<div className="search-books">
+						<div className="search-books-bar">
+							<button className="close-search" onClick={() => this.setState({showSearchPage: false})}>Close</button>
+							<div className="search-books-input-wrapper">
+								{/*
                   NOTES: The search from BooksAPI is limited to a particular set of search terms.
                   You can find these search terms here:
                   https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
 
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author"/>
+                */
+								}
+								<input type="text" placeholder="Search by title or author"/>
 
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
-        ) : (<ListBooks books={books} shelves={shelves} setShowSearchPage={this.setShowSearchPage}/>)}
-      </div>
-    )
-  }
+							</div>
+						</div>
+						<div className="search-books-results">
+							<ol className="books-grid"></ol>
+						</div>
+					</div>)
+					: <ListBooks books={books} shelves={shelves} handleSetShowSearchPage={this.setShowSearchPage} handleUpdateBook={this.updateBook}/>
+			}
+		</div>)
+	}
 }
 
 export default BooksApp

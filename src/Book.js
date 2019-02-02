@@ -1,7 +1,9 @@
 import React from "react";
+import BookshelfChanger from "./BookshelfChanger";
 
 const Book = (props) => {
-  const {book} = props;
+  const {book, shelves} = props;
+  const {handleUpdateBook} = props;
 
   return (
     <div className="book">
@@ -15,15 +17,11 @@ const Book = (props) => {
             backgroundImage: `url("${book.imageLinks.thumbnail}")`
           }}>
         </div>
-        <div className="book-shelf-changer">
-          <select>
-            <option value="move" disabled>Move to...</option>
-            <option value="currentlyReading">Currently Reading</option>
-            <option value="wantToRead">Want to Read</option>
-            <option value="read">Read</option>
-            <option value="none">None</option>
-          </select>
-        </div>
+        <BookshelfChanger
+          book={book}
+          shelves={shelves}
+          handleUpdateBook={handleUpdateBook}
+        />
       </div>
       <div className="book-title">{book.title}</div>
       <div className="book-authors">{book.authors.join(", ")}</div>

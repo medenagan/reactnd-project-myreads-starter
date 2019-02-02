@@ -3,7 +3,7 @@ import Bookshelf from "./Bookshelf";
 
 const ListBooks = (props) => {
   const {books, shelves} = props;
-  const {setShowSearchPage} = props;
+  const {handleSetShowSearchPage, handleUpdateBook} = props;
 
   return (
     <div className="list-books">
@@ -12,12 +12,19 @@ const ListBooks = (props) => {
       </div>
       <div className="list-books-content">
         {
-          // ["currently reading, want to read, and read"]
-          shelves.map(shelf => <Bookshelf books={books} shelf={shelf} key={shelf} />)
+          shelves.map(shelf => (
+            <Bookshelf
+              key={shelf}
+              shelf={shelf}
+              books={books}
+              shelves={shelves}
+              handleUpdateBook={handleUpdateBook}
+            />
+          ))
         }
       </div>
       <div className="open-search">
-        <button onClick={() => setShowSearchPage(true)}>Add a book</button>
+        <button onClick={() => handleSetShowSearchPage(true)}>Add a book</button>
       </div>
     </div>
   );
