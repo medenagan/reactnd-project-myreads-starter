@@ -1,6 +1,8 @@
 import React from 'react'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
+// Import all stuff from mock database API
+import * as db from './BooksAPI'
 
 class BooksApp extends React.Component {
   state = {
@@ -10,12 +12,27 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false
+    showSearchPage: false,
+    books: []
+  }
+
+
+
+  componentDidMount() {
+    db.getAll().then(
+      value => this.setState({books: value}),
+      reason => {
+        // TODO: real app should have proper error handling
+        this.setState({books: []});
+        console.error("Can't get book records", reason);
+      }
+    );
   }
 
   render() {
     return (
       <div className="app">
+        {console.log(this.state)}
         {this.state.showSearchPage ? (
           <div className="search-books">
             <div className="search-books-bar">
