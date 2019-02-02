@@ -33,8 +33,9 @@ class BooksApp extends React.Component {
   setShowSearchPage = (value) => this.setState({ showSearchPage: value });
 
   render() {
+    console.log("RENDER", this.state)
     const {books} = this.state;
-    const categories = ["currently reading", "want to read", "read"];
+    const shelves = ["currently reading", "want to read", "read"];
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -58,7 +59,7 @@ class BooksApp extends React.Component {
               <ol className="books-grid"></ol>
             </div>
           </div>
-        ) : (<ListBooks books={books} categories={categories} setShowSearchPage={this.setShowSearchPage}/>)}
+        ) : (<ListBooks books={books} shelves={shelves} setShowSearchPage={this.setShowSearchPage}/>)}
       </div>
     )
   }

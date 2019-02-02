@@ -2,7 +2,7 @@ import React from "react";
 import Bookshelf from "./Bookshelf";
 
 const ListBooks = (props) => {
-  const {books, categories} = props;
+  const {books, shelves} = props;
   const {setShowSearchPage} = props;
 
   return (
@@ -13,7 +13,7 @@ const ListBooks = (props) => {
       <div className="list-books-content">
         {
           // ["currently reading, want to read, and read"]
-          categories.map(category => <Bookshelf books={books} category={category} key={category} />)
+          shelves.map(shelf => <Bookshelf books={books} shelf={shelf} key={shelf} />)
         }
       </div>
       <div className="open-search">
