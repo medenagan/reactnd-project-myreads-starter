@@ -1,8 +1,10 @@
 import React from "react";
 import Bookshelf from "./Bookshelf";
+import ErrorLabel from "./ErrorLabel";
+
 
 const ListBooks = (props) => {
-  const {books, shelves} = props;
+  const {books, shelves, error} = props;
   const {handleSetShowSearchPage, handleUpdateBook} = props;
 
   return (
@@ -10,6 +12,7 @@ const ListBooks = (props) => {
       <div className="list-books-title">
         <h1>MyReads</h1>
       </div>
+      <ErrorLabel error={error} />
       <div className="list-books-content">
         {
           shelves.map(shelf => (

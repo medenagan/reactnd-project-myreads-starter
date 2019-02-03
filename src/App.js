@@ -16,7 +16,8 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
 		showSearchPage: false,
-		books: []
+		books: [],
+		error: false
 	}
 
 	get shelves() {
@@ -24,11 +25,10 @@ class BooksApp extends React.Component {
 	}
 
 	componentDidMount() {
-		db.getAll().then(value => this.setState({books: value}), reason => {
-			// TODO: real app should have proper error handling
-			this.setState({books: []});
-			console.error("Can't get book records", reason);
-		});
+		db.getAll().then(
+      value => this.setState({books: value, error: false}),
+      reason => this.setState({books: [], error: reason || true})
+    );
 	}
 
 	setShowSearchPage = (value) => this.setState({showSearchPage: value});
@@ -36,10 +36,10 @@ class BooksApp extends React.Component {
 	updateBook = (book, toShelf) => {
 		db.update(book, toShelf).then(dbResult => {
 
-      if (dbResult.error) {
-        alert(dbResult.error);
-        return;
-      }
+			if (dbResult.error) {
+				alert(dbResult.error);
+				return;
+			}
 
 			this.setState(prevState => {
 				// Create a copy of books where to clear the shelf reference
@@ -59,7 +59,7 @@ class BooksApp extends React.Component {
 
 	render() {
 		console.log("RENDER", this.state)
-		const {books} = this.state;
+		const {books, error} = this.state;
 		const {shelves} = this;
 		return (<div className="app">
 			{
@@ -85,7 +85,14 @@ class BooksApp extends React.Component {
 							<ol className="books-grid"></ol>
 						</div>
 					</div>)
-					: <ListBooks books={books} shelves={shelves} handleSetShowSearchPage={this.setShowSearchPage} handleUpdateBook={this.updateBook}/>
+					: (
+          <ListBooks
+            books={books}
+            shelves={shelves}
+            error={error}
+            handleSetShowSearchPage={this.setShowSearchPage}
+            handleUpdateBook={this.updateBook}
+          />)
 			}
 		</div>)
 	}

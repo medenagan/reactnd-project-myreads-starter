@@ -196,3 +196,36 @@ button:active {
   text-align: center;
   font-size: 0.8em;
 }
+
+.app-error {
+  color: #e66e07; /* brownish */
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.app-error-heading {
+  font-size: 40px;
+  font-weight: bolder;
+}
+
+.app-error-heading:before {
+  display: inline-block;
+  content: '';
+  background:url("icons/martini.svg") no-repeat;
+  background-size: 40px 40px;
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  vertical-align: -9%;
+}
+
+.app-error-body{
+  font-size: 20px;
+}
+
+.app-error-detail {
+  font-size: 11px;
+  font-style: oblique;
+  padding-top: 15px;
+}
