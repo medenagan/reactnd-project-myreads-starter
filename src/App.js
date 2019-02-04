@@ -3,6 +3,9 @@ import React from "react";
 import "./App.css";
 // Import components
 import ListBooks from "./ListBooks";
+import SearchBooks from "./SearchBooks";
+import ErrorLabel from "./ErrorLabel";
+import {Route, Switch} from "react-router-dom";
 // Import all stuff from mock database API
 import * as db from "./BooksAPI";
 
@@ -15,7 +18,6 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-		showSearchPage: false,
 		books: [],
 		error: false
 	}
@@ -61,40 +63,37 @@ class BooksApp extends React.Component {
 		console.log("RENDER", this.state)
 		const {books, error} = this.state;
 		const {shelves} = this;
-		return (<div className="app">
-			{
-				this.state.showSearchPage
-					? (<div className="search-books">
-						<div className="search-books-bar">
-							<button className="close-search" onClick={() => this.setState({showSearchPage: false})}>Close</button>
-							<div className="search-books-input-wrapper">
-								{/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
 
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */
-								}
-								<input type="text" placeholder="Search by title or author"/>
+		return (
+      <div className="app">
 
-							</div>
-						</div>
-						<div className="search-books-results">
-							<ol className="books-grid"></ol>
-						</div>
-					</div>)
-					: (
-          <ListBooks
-            books={books}
-            shelves={shelves}
-            error={error}
-            handleSetShowSearchPage={this.setShowSearchPage}
-            handleUpdateBook={this.updateBook}
-          />)
-			}
-		</div>)
+        <Switch>
+
+          <Route exact path="/search" render= {() => (
+            <SearchBooks
+              books={books}
+              shelves={shelves}
+              error={error}
+              handleUpdateBook={this.updateBook}
+            />
+          )}/>
+
+          <Route exact path="/" render= {() => (
+            <ListBooks
+              books={books}
+              shelves={shelves}
+              error={error}
+              handleUpdateBook={this.updateBook}
+            />
+          )}/>
+
+        <Route render= {(x) => (
+          <ErrorLabel error="404 Can't find this page" />
+        )}/>
+
+        </Switch>
+      </div>
+    );
 	}
 }
 

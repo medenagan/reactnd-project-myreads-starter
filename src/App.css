@@ -53,13 +53,14 @@ body, .app {
   bottom: 25px;
 }
 
-.open-search button {
+.open-search button,
+.open-search a {
   display: block;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   background: #2e7d32;
-  background-image: url('./icons/add.svg');
+  background-image: url('./icons/search.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 28px;
@@ -209,7 +210,7 @@ button:active {
   font-weight: bolder;
 }
 
-.app-error-heading:before {
+.app-error-heading::before {
   display: inline-block;
   content: '';
   background:url("icons/martini.svg") no-repeat;

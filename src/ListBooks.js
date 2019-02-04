@@ -1,11 +1,12 @@
 import React from "react";
 import Bookshelf from "./Bookshelf";
 import ErrorLabel from "./ErrorLabel";
+import OpenSearch from "./OpenSearch";
 
 
 const ListBooks = (props) => {
   const {books, shelves, error} = props;
-  const {handleSetShowSearchPage, handleUpdateBook} = props;
+  const {handleUpdateBook} = props;
 
   return (
     <div className="list-books">
@@ -26,9 +27,9 @@ const ListBooks = (props) => {
           ))
         }
       </div>
-      <div className="open-search">
-        <button onClick={() => handleSetShowSearchPage(true)}>Add a book</button>
-      </div>
+
+
+      <OpenSearch />
     </div>
   );
 };
