@@ -6,24 +6,29 @@ const BookshelfChanger = (props) => {
   const {book, shelves} = props;
   const {handleUpdateBook} = props;
 
-  const otherShelves = shelves.filter(
-    shelf => shelf.toLowerCase().replace(/\s/g, "") !== book.shelf.toLowerCase()
-  );
+  const NON_BREAKING_SPACE = String.fromCharCode(160);
+  const BLANK = NON_BREAKING_SPACE.repeat(4);
+  const CHECKED = "🗸" + NON_BREAKING_SPACE;
+
+  // Add a none category
+  if (shelves.indexOf("none") === -1) {
+    shelves.push("none");
+  }
 
   return (
     <div className="book-shelf-changer">
       <select defaultValue="move" onChange={e => handleUpdateBook(book, e.target.value)}>
         <option value="move" disabled>Move to...</option>
         {
-          otherShelves.map(shelf => (
-            <option
-              key={shelf}
-              value={shelf}>
-              {dromedaryToPrettyCase(shelf)}
-            </option>)
-          )
+          shelves.map(shelf => {
+            const isSameShelf = shelf.toLowerCase() === book.shelf.toLowerCase();
+            return (
+              <option key={shelf} value={shelf}>
+                {(isSameShelf ? CHECKED : BLANK) + dromedaryToPrettyCase(shelf)}
+              </option>
+            );
+          })
         }
-        <option value="none">None</option>
       </select>
     </div>
   );
