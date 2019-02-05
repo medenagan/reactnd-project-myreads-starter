@@ -45,7 +45,14 @@ class BooksApp extends React.Component {
 
 			this.setState(prevState => {
 				// Create a copy of books where to clear the shelf reference
-				const books = prevState.books.map(book => Object.assign({}, book, {shelf: ""}));
+				const books = prevState.books.map(
+          book => Object.assign({}, book, {shelf: ""})
+        );
+
+        // See if book hasn't been added locally yet
+        if (! books.some(eachBook => eachBook.id === book.id)) {
+          books.push(book);
+        }
 
 				// Reset shelf on each book {currentlyReading: ["sJf1vQAACAAJ"], ...}
 				this.shelves.forEach(shelf => dbResult[shelf].forEach(id => (books.find(book => book.id === id) || {
@@ -60,7 +67,6 @@ class BooksApp extends React.Component {
 	}
 
 	render() {
-		console.log("RENDER", this.state)
 		const {books, error} = this.state;
 		const {shelves} = this;
 
@@ -71,9 +77,8 @@ class BooksApp extends React.Component {
 
           <Route exact path="/search" render= {() => (
             <SearchBooks
-              books={books}
               shelves={shelves}
-              error={error}
+              localBooks={books}
               handleUpdateBook={this.updateBook}
             />
           )}/>

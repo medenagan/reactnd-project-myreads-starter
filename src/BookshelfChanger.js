@@ -21,7 +21,7 @@ const BookshelfChanger = (props) => {
         <option value="move" disabled>Move to...</option>
         {
           shelves.map(shelf => {
-            const isSameShelf = shelf.toLowerCase() === book.shelf.toLowerCase();
+            const isSameShelf = shelf.toLowerCase() === (book.shelf || "").toLowerCase();
             return (
               <option key={shelf} value={shelf}>
                 {(isSameShelf ? CHECKED : BLANK) + dromedaryToPrettyCase(shelf)}

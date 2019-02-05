@@ -10,11 +10,11 @@ const Book = (props) => {
       <div className="book-top">
         <div
           className="book-cover"
-          title={`${"☆".repeat(book.averageRating)} ${book.description.split(/\s+/).slice(0, 7).join(" ")}...`}
+          title={`${"☆".repeat(book.averageRating)} ${(book.description || "").split(/\s+/).slice(0, 7).join(" ")}...`}
           style={{
             width: 128,
             height: 192,
-            backgroundImage: `url("${book.imageLinks.thumbnail}")`
+            backgroundImage: `url("${book.imageLinks && book.imageLinks.thumbnail}")`
           }}>
         </div>
         <BookshelfChanger
@@ -23,8 +23,8 @@ const Book = (props) => {
           handleUpdateBook={handleUpdateBook}
         />
       </div>
-      <div className="book-title">{book.title}</div>
-      <div className="book-authors">{book.authors.join(", ")}</div>
+      <div className="book-title">{book.title || "[No Title]"}</div>
+      <div className="book-authors">{(book.authors || ["Various"]).join(", ")}</div>
     </div>
   );
 };

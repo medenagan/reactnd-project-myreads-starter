@@ -1,5 +1,5 @@
 import React from "react";
-import Book from "./Book";
+import BookGrid from "./BookGrid";
 import {dromedaryToPrettyCase} from "./utils";
 
 const Bookshelf = (props) => {
@@ -16,19 +16,7 @@ const Bookshelf = (props) => {
     <div className="bookshelf">
       <h2 className="bookshelf-title">{dromedaryToPrettyCase(shelf)}</h2>
         <div className="bookshelf-books">
-          <ol className="books-grid">
-            {
-              shelfBooks.map(book => (
-                <li key={book.id}>
-                  <Book
-                    book={book}
-                    shelves={shelves}
-                    handleUpdateBook={handleUpdateBook}
-                  />
-                </li>
-              ))
-            }
-          </ol>
+          <BookGrid books={shelfBooks} shelves={shelves} handleUpdateBook={handleUpdateBook}/>
         </div>
     </div>
   );
