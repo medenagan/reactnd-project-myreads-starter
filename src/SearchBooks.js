@@ -18,9 +18,6 @@ class SearchBooks extends Component {
       {query}, // Set the query for input
 
       () => {
-
-        const {localBooks} = this.props;
-
         // Once state is updated with the new query, inquire database
         const trimmedQuery = query.replace(/\s+/, " ").trim();
 
@@ -30,18 +27,9 @@ class SearchBooks extends Component {
 
         else {
           db.search(trimmedQuery).then(
-
             value => {
 
               if (Array.isArray(value)) {
-                // Find if returned books are stored locally
-                // and set their shelf in this case
-                value.forEach(
-                  anyDbBook => anyDbBook.shelf = (
-                    localBooks.find(anyLocalBook => anyLocalBook.id === anyDbBook.id) || {shelf: ""}
-                  ).shelf
-                );
-
                 this.updateResults(query, value);
               }
 
@@ -84,7 +72,7 @@ class SearchBooks extends Component {
   render () {
 
     const {query, searchBooks, searchError} = this.state;
-    const {localBooks, shelves, handleUpdateBook} = this.props;
+    const {shelves, localBooks, handleUpdateBook} = this.props;
 
     const suggestedQuery = [
       'Android', 'Art', 'Artificial Intelligence', 'Astronomy', 'Austen',
@@ -100,6 +88,16 @@ class SearchBooks extends Component {
       'Robotics', 'Rowling', 'Satire', 'Science Fiction', 'Shakespeare', 'Singh',
       'Swimming', 'Tale', 'Thrun', 'Time', 'Tolstoy', 'Travel', 'Ultimate',
       'Virtual Reality', 'Web Development', 'iOS'].join(", ");
+
+    // Find if returned books are stored locally
+    // and set their shelf in this case
+    const books = searchBooks.map(
+      anySearchBook => Object.assign(
+        {},
+        anySearchBook,
+        {shelf: (localBooks.find(anyLocalBook => anyLocalBook.id === anySearchBook.id) || {shelf: ""}).shelf}
+      )
+    );
 
     return (
 
@@ -130,7 +128,7 @@ class SearchBooks extends Component {
         <div>Found {searchBooks.length} book{searchBooks.length !== 1 && "s"}</div>
         <ErrorLabel error={searchError}/>
         <BookGrid
-          books={searchBooks}
+          books={books}
           shelves={shelves}
           handleUpdateBook={handleUpdateBook}
         />
